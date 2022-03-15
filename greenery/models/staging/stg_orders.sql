@@ -1,4 +1,5 @@
-select 
+with orders as (
+    select 
     order_id,
     user_id,
     promo_id,
@@ -13,4 +14,6 @@ select
     delivered_at,
     status
 
-from {{ source('greenery','orders')}}
+    from {{ source('greenery','orders')}}
+    )
+select * from orders
