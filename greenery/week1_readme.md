@@ -3,25 +3,28 @@ How many users do we have?
 * Result: 130
 
 On average, how many orders do we receive per hour?
-```select avg(sub.hourly_order_count) from 
-(select extract(hour from created_at) as hour, count(order_id) as hourly_order_count
+```with orders as
+(select date_trunc('hour', created_at) as hour, count(order_id) as hourly_order_count
 from dbt_rachelw.stg_orders
-group by 1) sub
+group by 1) 
+select avg(hourly_order_count) from orders 
 ```
 * Result: 15
 
 On average, how long does an order take from being placed to being delivered?
-```select avg(sub.total_time) from 
+```with orders as 
 (select delivered_at-created_at as total_time
-from dbt_rachelw.stg_orders) sub
+from dbt_rachelw.stg_orders) 
+select avg(total_time) from orders
 ```
 * Result: 3 days 21 hours 24 minutes
 
 How many users have only made one purchase? Two purchases? Three+ purchases?
-```select sub.order_count, count(sub.user_id) as count_users from 
+```with orders as 
 (select user_id, count(order_id) as order_count
 from dbt_rachelw.stg_orders
-group by 1) sub
+group by 1) 
+select order_count, count(user_id) as count_users from orders
 group by 1 order by 1
 ```
 
@@ -34,9 +37,10 @@ group by 1 order by 1
 | 3+ | 71 |
 
 On average, how many unique sessions do we have per hour?
-```select avg(sub.hourly_session_count) from 
-(select extract(hour from created_at) as hour, count(distinct session_id) as hourly_session_count
+```with sessions as 
+(select date_trunc('hour', created_at) as hour, count(distinct session_id) as hourly_session_count
 from dbt_rachelw.stg_events
-group by 1) sub
+group by 1) 
+select avg(hourly_session_count) from sessions
 ```
 * Result: 39
