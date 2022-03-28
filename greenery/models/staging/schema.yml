@@ -74,6 +74,9 @@ models:
         description: Type of event
       - name: order_id
         description: If the event is specific to an order (mostly used for checkout)
+        tests:
+          - dbt_utils.not_null_proportion:
+              at_least: 0.1
       - name: product_id
         description: If the event is specific to a product
   - name: stg_order_items
