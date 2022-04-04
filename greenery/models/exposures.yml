@@ -1,0 +1,11 @@
+version: 2
+
+exposures:
+  - name: Product Analytics Funnel
+    description: >
+      Answers the questions: How are our users moving through the product funnel? Which steps in the funnel have largest drop off points?
+    type: dashboard
+    owner:
+      email: rachel@notarealemail.net
+    depends_on:
+      - ref('fact_session_events')
